@@ -12,5 +12,12 @@ uint8_t *ec_to_pub(EC_KEY const *key, uint8_t pub[EC_PUB_LEN])
 {
 	if (!key)
 		return (NULL);
-	return (memcpy(pub, EC_KEY_get0_public_key(key), EC_PUB_LEN), pub);
+	EC_POINT_point2oct(
+		EC_KEY_get0_group(key), 
+		EC_KEY_get0_public_key(key),
+		EC_KEY_get_conv_form(key),
+		pub,
+		EC_PUB_LEN,
+		NULL);
+	return (pub);
 }
