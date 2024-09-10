@@ -3,3 +3,4 @@ vgcore*
 test_*
 build
 .vscode
+*-test
