@@ -30,7 +30,8 @@
  * struct sig_s - EC Signature structure
  *
  * @sig: Signature buffer. The whole space may not be used
- * @len: Actual signature size. Can't exceed SIG_MAX_LEN, therefore stored on a byte
+ * @len: Actual signature size. Can't exceed SIG_MAX_LEN, therefore stored on a
+ *       byte
  */
 typedef struct sig_s
 {

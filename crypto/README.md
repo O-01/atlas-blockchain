@@ -1,13 +1,13 @@
 # Blockchain - Crypto
 #### Concepts
 *For this project, we expect you to look at these concepts:*
-- [[EYNTK] Blockchain - Introduction]()
+- [[EYNTK] Blockchain - Introduction](https://intranet.atlasschool.com/concepts/942)
 - [[EYNTK] Blockchain - Crypto]()
 #
 ## Resources
 #### Read or watch:
 - [OpenSSL crypto library]()
-- [Provided libraries and sources]()
+- [Provided libraries and sources](https://github.com/hs-hq/holbertonschool-blockchain)
 ## Learning Objectives
 At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
 ### General
@@ -35,7 +35,7 @@ At the end of this project, you are expected to be able to explain to anyone, wi
 More Info
 Dependencies
 
-For this project, you will need to Install the OpenSSL library (if not already installed).
+For this project, you will need to [Install the OpenSSL library](https://help.ubuntu.com/community/OpenSSL#Practical_OpenSSL_Usage) (if not already installed).
 Additional information
 - Unless specified otherwise, you are allowed to use the C standard library
 - You are free to use any data structure that suits you as long as their purpose is well defined
