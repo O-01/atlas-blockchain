@@ -14,6 +14,7 @@ uint8_t *ec_sign(
 {
 	if (!key || !msg || (msg && !msglen))
 		return (NULL);
-	ECDSA_sign(0, msg, msglen, sig->sig, (unsigned int *)&sig->len, (EC_KEY *)key);
+	ECDSA_sign(
+		0, msg, msglen, sig->sig, (unsigned int *)&sig->len, (EC_KEY *)key);
 	return (sig->sig);
 }
