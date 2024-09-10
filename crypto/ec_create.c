@@ -12,7 +12,5 @@ EC_KEY *ec_create(void)
 	key = EC_KEY_new_by_curve_name(NID_secp256k1);
 	if (!key)
 		return (NULL);
-	if (!EC_KEY_generate_key(key))
-		return (NULL);
-	return (key);
+	return (EC_KEY_generate_key(key) ? key : NULL);
 }
