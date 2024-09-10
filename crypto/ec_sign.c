@@ -12,11 +12,8 @@
 uint8_t *ec_sign(
 	EC_KEY const *key, uint8_t const *msg, size_t msglen, sig_t *sig)
 {
-	uint8_t digest[SHA256_DIGEST_LENGTH] = {0};
-
 	if (!key || !msg || (msg && !msglen))
 		return (NULL);
-	SHA256(msg, msglen, digest);
-	ECDSA_sign(0, digest, SHA256_DIGEST_LENGTH, sig->sig, (unsigned int *)&sig->len, (EC_KEY *)key);
+	ECDSA_sign(0, msg, msglen, sig->sig, (unsigned int *)&sig->len, (EC_KEY *)key);
 	return (sig->sig);
 }
