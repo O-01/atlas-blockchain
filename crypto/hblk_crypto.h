@@ -3,13 +3,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+
+/* #include "ec_lcl.h" */
 
 #include <openssl/sha.h>
 #include <stdint.h>
 
-/* #include <openssl/bio.h> */
+#include <openssl/bio.h>
 #include <openssl/ec.h>
-/* #include <openssl/ecdh.h> */
 #include <openssl/ecdsa.h>
 #include <openssl/evp.h>
 #include <openssl/obj_mac.h>

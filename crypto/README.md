@@ -2,11 +2,11 @@
 #### Concepts
 *For this project, we expect you to look at these concepts:*
 - [[EYNTK] Blockchain - Introduction](https://intranet.atlasschool.com/concepts/942)
-- [[EYNTK] Blockchain - Crypto]()
+- [[EYNTK] Blockchain - Crypto](https://intranet.atlasschool.com/concepts/943)
 #
 ## Resources
 #### Read or watch:
-- [OpenSSL crypto library]()
+- [OpenSSL crypto library](https://docs.openssl.org/master/)
 - [Provided libraries and sources](https://github.com/hs-hq/holbertonschool-blockchain)
 ## Learning Objectives
 At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
