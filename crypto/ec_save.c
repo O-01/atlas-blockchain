@@ -1,7 +1,5 @@
 #include "hblk_crypto.h"
 
-void _print_hex_buffer(uint8_t const *buf, size_t len);
-
 /**
  * ec_save - saves existing EC key pair on disk
  * @key: points to EC key pair to be saved on disk
@@ -19,9 +17,9 @@ int ec_save(EC_KEY *key, char const *folder)
 	if (lstat(folder, &info) == -1 || !S_ISDIR(info.st_mode))
 		mkdir(folder, 0755);
 	memcpy(key_path, folder, strlen(folder));
-	memcpy(&key_path[strlen(folder)], "/key.pem", 8);
+	memcpy(&key_path[strlen(folder)], "/" PRI_FILENAME, 8);
 	memcpy(key_pub_path, folder, strlen(folder));
-	memcpy(&key_pub_path[strlen(folder)], "/key_pub.pem", 12);
+	memcpy(&key_pub_path[strlen(folder)], "/" PUB_FILENAME, 12);
 	stream = fopen(key_pub_path, "w+");
 	PEM_write_EC_PUBKEY(stream, key);
 	fclose(stream);
