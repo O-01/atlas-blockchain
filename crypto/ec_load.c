@@ -16,7 +16,7 @@ EC_KEY *ec_load(char const *folder)
 		return (NULL);
 	key = EC_KEY_new_by_curve_name(EC_CURVE);
 	memcpy(key_path, folder, strlen(folder));
-	memcpy(&key_path[strlen(folder)], "/key.pem", 9);
+	memcpy(&key_path[strlen(folder)], "/key.pem", 8);
 	memcpy(key_pub_path, folder, strlen(folder));
 	memcpy(&key_pub_path[strlen(folder)], "/key_pub.pem", 12);
 	stream = fopen(key_pub_path, "r");

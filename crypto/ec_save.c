@@ -19,7 +19,7 @@ int ec_save(EC_KEY *key, char const *folder)
 	if (lstat(folder, &info) == -1 || !S_ISDIR(info.st_mode))
 		mkdir(folder, 0755);
 	memcpy(key_path, folder, strlen(folder));
-	memcpy(&key_path[strlen(folder)], "/key.pem", 9);
+	memcpy(&key_path[strlen(folder)], "/key.pem", 8);
 	memcpy(key_pub_path, folder, strlen(folder));
 	memcpy(&key_pub_path[strlen(folder)], "/key_pub.pem", 12);
 	stream = fopen(key_pub_path, "w+");
