@@ -9,37 +9,35 @@
 - [OpenSSL crypto library](https://docs.openssl.org/master/)
 - [Provided libraries and sources](https://github.com/hs-hq/holbertonschool-blockchain)
 ## Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+At the end of this project, you are expected to be able to [explain to anyone](https://fs.blog/feynman-learning-technique/), **without the help of Google**:
 ### General
 - How a Blockchain is considered “unbreakable”
 - What is a hash algorithm
-- What SHA stands for
+- What **SHA** stands for
 - How hash algorithms apply to Blockchains
 - What is asymmetric cryptography
 - How asymmetric cryptography applies to cryptocurrencies
-- What ECC stands for
-- What ECDSA stands for
+- What **ECC** stands for
+- What **ECDSA** stands for
 - What a digital signature is
 - How digital signatures apply to cryptocurrencies
 ## Requirements
 ### General
-- Allowed editors: vi, vim, emacs
-- All your files will be compiled on Ubuntu 20.04 LTS
-- Your C programs and functions will be compiled with gcc 9.* using the flags -Wall -Werror -Wextra, -pedantic -Wno-deprecated-declarations and the linker flags -lssl and -lcrypto
+- Allowed editors: `vi`, `vim`, `emacs`
+- All your files will be compiled on **Ubuntu 20.04 LTS**
+- Your C programs and functions will be compiled with `gcc 9.*` using the flags `-Wall` `-Werror` `-Wextra`, `-pedantic` `-Wno-deprecated-declarations` **and the linker flags** `-lssl` and `-lcrypto`
 - All your files should end with a new line
-- A README.md file, at the root of the folder of the project, is mandatory
-- Your code should use the Betty style. It will be checked using betty-style.pl and betty-doc.pl
-- The prototypes of all your functions should be included in your header file called crypto/hblk_crypto.h
+- A **README.md** file, at the root of the folder of the project, is mandatory
+- Your code should use the `Betty` style. It will be checked using [betty-style.pl](https://github.com/hs-hq/Betty/blob/main/betty-style.pl) and [betty-doc.pl](https://github.com/hs-hq/Betty/blob/main/betty-doc.pl)
+- The prototypes of all your functions should be included in your header file called `crypto/hblk_crypto.h`
 - All your header files should be include guarded
-
-More Info
-Dependencies
-
+## More Info
+### Dependencies
 For this project, you will need to [Install the OpenSSL library](https://help.ubuntu.com/community/OpenSSL#Practical_OpenSSL_Usage) (if not already installed).
-Additional information
+### Additional information
 - Unless specified otherwise, you are allowed to use the C standard library
 - You are free to use any data structure that suits you as long as their purpose is well defined
-- You are free to print any information on stderr, this stream will be discarded during correction. Since you are going to use these utility functions in your Blockchain project, you are free to manage errors as you wish.
+- You are free to print any information **on stderr**, this stream will be discarded during correction. Since you are going to use these utility functions in your Blockchain project, you are free to manage errors as you wish.
 - At the end of this project, the structure of your repository should look like this (you may have additional files):
 ```
 holbertonschool-blockchain
@@ -72,12 +70,12 @@ holbertonschool-blockchain
 ## Tasks
 #### 0. SHA256
 Write a function that computes the hash of a sequence of bytes
-- Prototype: uint8_t *sha256(int8_t const *s, size_t len, uint8_t digest[SHA256_DIGEST_LENGTH]);, where
-    - s is the sequence of bytes to be hashed
-    - len is the number of bytes to hash in s
-- The resulting hash must be stored in digest
-- Your function must return a pointer to digest
-- If digest happens to be NULL, your function must do nothing and return NULL
+- Prototype: `uint8_t *sha256(int8_t const *s, size_t len, uint8_t digest[SHA256_DIGEST_LENGTH]);`, where
+    - `s` is the sequence of bytes to be hashed
+    - `len` is the number of bytes to hash in `s`
+- The resulting hash must be stored in `digest`
+- Your function must return a pointer to `digest`
+- If `digest` happens to be `NULL`, your function must do nothing and return `NULL`
 - You are not allowed to allocate memory dynamically
 ```
 alex@~/holbertonschool-blockchain/crypto$ cat test/sha256-main.c
@@ -141,10 +139,10 @@ alex@~/holbertonschool-blockchain/crypto$
 #
 #### 1. EC_KEY creation
 Write a function that creates a new EC key pair.
-- Prototype: EC_KEY *ec_create(void);
-- Your function must return a pointer to an EC_KEY structure, containing both the public and private keys, or NULL upon failure
+- Prototype: `EC_KEY *ec_create(void);`
+- Your function must return a pointer to an `EC_KEY` structure, containing both the public and private keys, or `NULL` upon failure
 - Both the private and the public keys must be generated
-- You have to use the secp256k1 elliptic curve to create the new pair (See EC_CURVE macro)
+- You have to use the [secp256k1](https://en.bitcoin.it/wiki/Secp256k1) elliptic curve to create the new pair (See `EC_CURVE` macro)
 ```
 alex@~/holbertonschool-blockchain/crypto$ cat test/ec_create-main.c 
 #include <stdlib.h>
@@ -206,14 +204,14 @@ alex@~/holbertonschool-blockchain/crypto$
 - File: `crypto/ec_create.c`
 #
 #### 2. EC_KEY to public key
-Write a function that extracts the public key from an EC_KEY opaque structure
-- Prototype: uint8_t *ec_to_pub(EC_KEY const *key, uint8_t pub[EC_PUB_LEN]);, where:
-    - key is a pointer to the EC_KEY structure to retrieve the public key from. If it is NULL, your function must do nothing and fail
-    - pub is the address at which to store the extracted public key (The key shall not be compressed)
-- Your function must return a pointer to pub
-- NULL must be returned upon failure, and there should not be any memory leak
+Write a function that extracts the public key from an `EC_KEY` opaque structure
+- Prototype: `uint8_t *ec_to_pub(EC_KEY const *key, uint8_t pub[EC_PUB_LEN]);`, where:
+    - `key` is a pointer to the `EC_KEY` structure to retrieve the public key from. If it is `NULL`, your function must do nothing and fail
+    - `pub` is the address at which to store the extracted public key (The key shall not be compressed)
+- Your function must return a pointer to `pub`
+- `NULL` must be returned upon failure, and there should not be any memory leak
 
-NOTE: It is also possible to extract the private key from an EC_KEY structure, but we’re never going to store one’s private key anywhere in the Blockchain. So we don’t really need it.
+*NOTE:* It is also possible to extract the private key from an EC_KEY structure, but we’re never going to store one’s private key anywhere in the Blockchain. So we don’t really need it.
 ```
 alex@~/holbertonschool-blockchain/crypto$ cat test/ec_to_pub-main.c 
 #include <stdlib.h>
@@ -293,11 +291,11 @@ alex@~/holbertonschool-blockchain/crypto$
 - File: `crypto/ec_to_pub.c`
 #
 #### 3. EC_KEY from public key
-Write a function that creates an EC_KEY structure given a public key
-- Prototype: EC_KEY *ec_from_pub(uint8_t const pub[EC_PUB_LEN]);, where:
-    - pub contains the public key to be converted
-- Your function must return a pointer to the created EC_KEY structure upon success, or NULL upon failure
-- The created EC_KEY‘s private key does not have to be initialized/set, we only care about the public one
+Write a function that creates an `EC_KEY` structure given a public key
+- Prototype: `EC_KEY *ec_from_pub(uint8_t const pub[EC_PUB_LEN]);`, where:
+    - `pub` contains the public key to be converted
+- Your function must return a pointer to the created `EC_KEY` structure upon success, or `NULL` upon failure
+- The created `EC_KEY`‘s private key does not have to be initialized/set, we only care about the public one
 ```
 alex@~/holbertonschool-blockchain/crypto$ cat test/ec_from_pub-main.c 
 #include <stdlib.h>
@@ -399,13 +397,13 @@ alex@~/holbertonschool-blockchain/crypto$
 #
 #### 4. EC_KEY - Save to file
 Write a function that saves an existing EC key pair on the disk.
-- Prototype: int ec_save(EC_KEY *key, char const *folder);, where
-    - key points to the EC key pair to be saved on disk
-    - folder is the path to the folder in which to save the keys (e.g. /home/hblk/alex)
+- Prototype: `int ec_save(EC_KEY *key, char const *folder);`, where
+    - `key` points to the EC key pair to be saved on disk
+    - `folder` is the path to the folder in which to save the keys (e.g. `/home/hblk/alex`)
 - Your function must respectively return 1 or 0 upon success or failure
-- folder must be created if it doesn’t already exist
-    - <folder>/key.pem will contain the private key, in the PEM format. The file must be created, or overridden if it already exists (e.g. /home/alex/.hblk/alex/key.pem)
-    - <folder>/key_pub.pem will contain the public key, in the PEM format. The file must be created, or overridden if it already exists (e.g. /home/alex/.hblk/alex/key_pub.pem)
+- `folder` must be created if it doesn’t already exist
+    - `<folder>/key.pem` will contain the **private** key, in the **PEM** format. The file must be created, or overridden if it already exists (e.g. `/home/alex/.hblk/alex/key.pem`)
+    - `<folder>/key_pub.pem` will contain the **public** key, in the **PEM** format. The file must be created, or overridden if it already exists (e.g. `/home/alex/.hblk/alex/key_pub.pem`)
 ```
 alex@~/holbertonschool-blockchain/crypto$ cat test/ec_save-main.c
 #include <stdlib.h>
@@ -516,12 +514,12 @@ alex@~/holbertonschool-blockchain/crypto$
 #
 #### 5. EC_KEY - Load from file
 Write a function that loads an EC key pair from the disk.
-- Prototype: EC_KEY *ec_load(char const *folder);, where
-    - folder is the path to the folder from which to load the keys (e.g. /home/hblk/alex)
-- Your function must return a pointer to the created EC key pair upon success, or NULL upon failure
-- From the folder folder:
-    - <folder>/key.pem will contain the private key, in the PEM format.
-    - <folder>/key_pub.pem will contain the public key, in the PEM format.
+- Prototype: `EC_KEY *ec_load(char const *folder);`, where
+    - `folder` is the path to the folder from which to load the keys (e.g. `/home/hblk/alex`)
+- Your function must return a pointer to the created EC key pair upon success, or `NULL` upon failure
+- From the folder `folder`:
+    - `<folder>/key.pem` will contain the **private** key, in the **PEM** format.
+    - `<folder>/key_pub.pem` will contain the **public** key, in the **PEM** format.
 ```
 alex@~/holbertonschool-blockchain/crypto$ cat test/ec_load-main.c
 #include <stdlib.h>
@@ -588,15 +586,15 @@ alex@~/holbertonschool-blockchain/crypto$
 - File: `crypto/ec_load.c`
 #
 #### 6. Signature
-Write a function that signs a given set of bytes, using a given EC_KEY private key
-- Prototype: uint8_t *ec_sign(EC_KEY const *key, uint8_t const *msg, size_t msglen, sig_t *sig);, where:
-    - key points to the EC_KEY structure containing the private key to be used to perform the signature
-    - msg points to the msglen characters to be signed
-    - sig holds the address at which to store the signature
-    - If either key or msg is NULL, your function must fail
-- sig->sig does not need to be zero-terminated. If you feel like you want to zero-terminate it, make sure that sig->len holds the size of the signature without the trailing zero byte
-- Your function must return a pointer to the signature buffer upon success (sig->sig)
-- NULL must be returned upon failure
+Write a function that signs a given set of bytes, using a given EC_KEY **private key**
+- Prototype: `uint8_t *ec_sign(EC_KEY const *key, uint8_t const *msg, size_t msglen, sig_t *sig);`, where:
+    - `key` points to the `EC_KEY` structure containing the private key to be used to perform the signature
+    - `msg` points to the `msglen` characters to be signed
+    - `sig` holds the address at which to store the signature
+    - If either `key` or `msg` is NULL, your function must fail
+- `sig->sig` does not need to be zero-terminated. If you feel like you want to zero-terminate it, make sure that `sig->len` holds the size of the signature without the trailing zero byte
+- Your function must return a pointer to the signature buffer upon success (`sig->sig`)
+- `NULL` must be returned upon failure
 ```
 alex@~/holbertonschool-blockchain/crypto$ cat test/ec_sign-main.c 
 #include <stdlib.h>
@@ -679,12 +677,12 @@ alex@~/holbertonschool-blockchain/crypto$
 - File: `crypto/ec_sign.c`
 #
 #### 7. Signature verification
-Write a function that verifies the signature of a given set of bytes, using a given EC_KEY public key
-- Prototype: int ec_verify(EC_KEY const *key, uint8_t const *msg, size_t msglen, sig_t const *sig);, where:
-    - key points to the EC_KEY structure containing the public key to be used to verify the signature
-    - msg points to the msglen characters to verify the signature of
-    - sig points to the signature to be checked
-    - If either key, msg or sig is NULL, your function must fail
+Write a function that verifies the signature of a given set of bytes, using a given EC_KEY **public key**
+- Prototype: `int ec_verify(EC_KEY const *key, uint8_t const *msg, size_t msglen, sig_t const *sig);`, where:
+    - `key` points to the `EC_KEY` structure containing the public key to be used to verify the signature
+    - `msg` points to the `msglen` characters to verify the signature of
+    - `sig` points to the signature to be checked
+    - If either `key`, `msg` or `sig` is NULL, your function must fail
 - Your function must return 1 if the signature is valid, and 0 otherwise
 ```
 alex@~/holbertonschool-blockchain/crypto$ cat test/ec_verify-main.c 
@@ -779,7 +777,7 @@ alex@~/holbertonschool-blockchain/crypto$
 #### 8. Library
 Write a Makefile that compiles all the previous functions and archives them into a static library for future use.
 
-The library must be called libhblk_crypto.a, and your Makefile must define a rule for this file.
+The library must be called `libhblk_crypto.a`, and your Makefile must define a rule for this file.
 ```
 alex@~/holbertonschool-blockchain/crypto$ make libhblk_crypto.a
 [...]
