@@ -7,10 +7,8 @@
 #include <string.h>
 
 #include <llist.h>
-
 #include <openssl/sha.h>
-
-#include "endianness.h"
+#include "provided/endianness.h"
 
 #define HOLBERTON_SCHOOL_SHA256 \
 	"\xc5\x2c\x26\xc8\xb5\x46\x16\x39\x63\x5d\x8e\xdf\x2a\x97\xd4\x8d" \
