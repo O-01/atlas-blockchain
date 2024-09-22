@@ -13,7 +13,7 @@ all: libhblk_crypto.a clean
 	@$(CC) $(CFLAGS) -c $(INC) $< -o $@
 
 libhblk_crypto.a: $(OBJ)
-	ar rcs $@ $^
+	@ar rcs $@ $^
 
 clean:
 	@$(RM) -rf *.o
