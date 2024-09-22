@@ -2,7 +2,6 @@
 #### Concepts
 *For this project, we expect you to look at this concept:*
 - [[EYNTK] Blockchain - Data structures](https://intranet.atlasschool.com/concepts/944)
-#
 ## Resources
 #### Read or watch:
 - [Everything You Need To Know - Concept page](https://intranet.atlasschool.com/concepts/944)
