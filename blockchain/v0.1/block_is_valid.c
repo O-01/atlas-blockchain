@@ -23,6 +23,7 @@ int block_is_valid(block_t const *block, block_t const *prev_block)
 	block_hash(prev_block, prev_hash);
 	block_hash(block, current_hash);
 	return (!(!memcmp(prev_block->hash, prev_hash, SHA256_DIGEST_LENGTH) &&
+		!memcmp(block->info.prev_hash, prev_hash, SHA256_DIGEST_LENGTH) &&
 		!memcmp(block->hash, current_hash, SHA256_DIGEST_LENGTH)));
 }
 
