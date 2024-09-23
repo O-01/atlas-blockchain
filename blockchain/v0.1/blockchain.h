@@ -19,6 +19,16 @@
 	"\xc5\x2c\x26\xc8\xb5\x46\x16\x39\x63\x5d\x8e\xdf\x2a\x97\xd4\x8d" \
 	"\x0c\x8e\x00\x09\xc8\x17\xf2\xb1\xd3\xd7\xff\x2f\x04\x51\x58\x03"
 
+#define HBLK "\x48\x42\x4c\x4b"
+#define VERS "\x30\x2e\x31" /* 0.1 */
+#define GET_ENDIAN (_get_endianness())
+#define ENDIAN (GET_ENDIAN == 1 ? "\x01" : "\x02")
+
+#define LITTLE_END 1
+#define BIG_END 2
+#define IS_LITTLE_ENDIAN (GET_ENDIAN == 1)
+#define IS_BIG_ENDIAN (GET_ENDIAN == 2)
+
 #define BLOCKCHAIN_DATA_MAX 1024
 
 /**
