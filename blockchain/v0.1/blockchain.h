@@ -29,9 +29,6 @@
 #define IS_LITTLE_ENDIAN (GET_ENDIAN == 1)
 #define IS_BIG_ENDIAN (GET_ENDIAN == 2)
 
-#define BLK_INFO_SZ 56
-#define BLK_DATA_SZ 1028
-
 #define BLOCKCHAIN_DATA_MAX 1024
 
 /**
