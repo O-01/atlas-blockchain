@@ -15,16 +15,16 @@ blockchain_t *blockchain_create(void)
 	add = calloc(1, sizeof(blockchain_t));
 	if (!add)
 		return (NULL);
-	block = calloc(1, sizeof(block_t));
-	if (!block)
-		return (free(add), add = NULL);
 	add->chain = llist_create(MT_SUPPORT_FALSE);
 	if (!add->chain)
-		return (free(add), add = NULL);
+		return (FREE_0(add));
+	block = calloc(1, sizeof(block_t));
+	if (!block)
+		return (llist_destroy(add->chain, 0, NULL), FREE_0(add));
 	block->info = inf;
 	block->data = dat;
 	memcpy(block->hash, HOLBERTON_SCHOOL_SHA256, SHA256_DIGEST_LENGTH);
 	if (llist_add_node(add->chain, block, ADD_NODE_REAR) == -1)
-		return (llist_destroy(add->chain, 0, NULL), free(add), add = NULL);
+		return (llist_destroy(add->chain, 0, NULL), FREE_0(add));
 	return (add);
 }

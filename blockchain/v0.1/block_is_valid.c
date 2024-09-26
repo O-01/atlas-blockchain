@@ -8,7 +8,7 @@ void _print_hex_buffer(uint8_t const *buf, size_t len);
  * @block: points to Block to check
  * @prev_block: points to previous Block in Blockchain, NULL if block is first
  *              Block of chain
- * Return: 1 if valid, otherwise 0
+ * Return: 0 if valid, otherwise non-zero value
  */
 int block_is_valid(block_t const *block, block_t const *prev_block)
 {
@@ -30,7 +30,7 @@ int block_is_valid(block_t const *block, block_t const *prev_block)
 /**
  * is_genesis - checks if current block is genesis block
  * @block: pointer to Block to verify against genesis data
- * Return: 1 if matches genesis data, otherwise 0
+ * Return: 0 if matches genesis data, otherwise non-zero value
  */
 static int is_genesis(block_t const *block)
 {
