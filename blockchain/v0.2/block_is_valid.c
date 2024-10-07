@@ -16,7 +16,8 @@ int block_is_valid(block_t const *block, block_t const *prev_block)
 	uint8_t current_hash[SHA256_DIGEST_LENGTH] = {0};
 
 	if (!block || (!prev_block && block->info.index) ||
-		(prev_block && block->info.index != prev_block->info.index + 1))
+		(prev_block && block->info.index != prev_block->info.index + 1) ||
+		!hash_matches_difficulty(block->hash, block->info.difficulty))
 		return (1);
 	if (!block->info.index)
 		return (is_genesis(block));
