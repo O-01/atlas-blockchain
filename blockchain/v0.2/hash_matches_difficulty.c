@@ -13,7 +13,7 @@ int hash_matches_difficulty(
 
 	if (!hash)
 		return (0);
-	for (; count < difficulty + 1; ++count, mark = !mark ? 7 : mark - 1)
+	for (; count < difficulty + 1; ++count, mark = (mark - 1) & 7)
 		if ((hash[count / 8] & (1 << mark)))
 			break;
 	return (count == difficulty);
