@@ -31,6 +31,19 @@
 
 #define BLOCKCHAIN_DATA_MAX 1024
 
+#define BLOCK_GENERATION_INTERVAL 1
+#define DIFFICULTY_ADJUSTMENT_INTERVAL 5
+
+#define INDEX_ADJUSTMENT(x) (!(x) % DIFFICULTY_ADJUSTMENT_INTERVAL)
+#define LAST_ADJUSTED(x) ((x) > DIFFICULTY_ADJUSTMENT_INTERVAL ? \
+	(x) - DIFFICULTY_ADJUSTMENT_INTERVAL : 0)
+
+#define EXPECTED(x, y) \
+	(((x)->info.index - (y)->info.index) * BLOCK_GENERATION_INTERVAL)
+#define ACTUAL(x, y) ((x)->info.timestamp - (y)->info.timestamp)
+
+
+
 /**
  * struct block_info_s - Block info structure
  *
