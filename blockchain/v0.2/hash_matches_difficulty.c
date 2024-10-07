@@ -16,5 +16,5 @@ int hash_matches_difficulty(
 	for (; count < difficulty + 1; ++count, mark = (mark - 1) & 7)
 		if ((hash[count / 8] & (1 << mark)))
 			break;
-	return (count == difficulty);
+	return (count >= difficulty);
 }
