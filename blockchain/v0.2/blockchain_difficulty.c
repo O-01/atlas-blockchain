@@ -11,7 +11,6 @@ static uint32_t adjusted_index(blockchain_t const *blockchain);
 uint32_t blockchain_difficulty(blockchain_t const *blockchain)
 {
 	block_t *block = NULL, *last_adj = NULL;
-	uint32_t difficulty = 0;
 
 	if (!blockchain)
 		return (0);
@@ -21,7 +20,9 @@ uint32_t blockchain_difficulty(blockchain_t const *blockchain)
 	if (INDEX_ADJUSTMENT(block->info.index))
 		return(block->info.difficulty + 1);
 	last_adj = llist_get_node_at(blockchain->chain, adjusted_index(blockchain));
-	if (ACTUAL(block, last_adj) < (EXPECTED(block, last_adj) >> 1))
+	if (!ACTUAL(block, last_adj))
+		return (block->info.difficulty);
+	else if (ACTUAL(block, last_adj) < (EXPECTED(block, last_adj) >> 1))
 		return (block->info.difficulty + 1);
 	else if (ACTUAL(block, last_adj) > (EXPECTED(block, last_adj) << 1))
 		return (block->info. difficulty - 1);
