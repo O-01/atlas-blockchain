@@ -33,6 +33,8 @@ blockchain_t *blockchain_deserialize(char const *path)
 	for (fread(&count, sizeof(uint32_t), 1, stream); iter < count; ++iter)
 	{
 		block = calloc(1, sizeof(block_t));
+		if (!block)
+			return (blockchain_destroy(blockchain), fclose(stream), NULL);
 		fread(&block->info, sizeof(block_info_t), 1, stream);
 		fread(&block->data.len, sizeof(uint32_t), 1, stream);
 		fread(block->data.buffer, block->data.len, 1, stream);
