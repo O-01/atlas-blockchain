@@ -21,11 +21,9 @@
 
 #define HBLK "\x48\x42\x4c\x4b"
 #define VERS "\x30\x2e\x32" /* 0.2 */
+
 #define GET_ENDIAN (_get_endianness())
 #define ENDIAN (GET_ENDIAN == 1 ? "\x01" : "\x02")
-
-#define LITTLE_END 1
-#define BIG_END 2
 #define IS_LITTLE_ENDIAN (GET_ENDIAN == 1)
 #define IS_BIG_ENDIAN (GET_ENDIAN == 2)
 
@@ -41,11 +39,8 @@
 	((x)->info.index - (y)->info.index) * BLOCK_GENERATION_INTERVAL)
 #define ACTUAL(x, y) ((x)->info.timestamp - (y)->info.timestamp)
 
-
-
 /**
  * struct block_info_s - Block info structure
- *
  * @index:      Index of the Block in the Blockchain
  * @difficulty: Difficulty of proof of work (hash leading zero bits)
  * @timestamp:  Time the Block was created at (UNIX timestamp)
@@ -70,7 +65,6 @@ typedef struct block_info_s
 
 /**
  * struct block_data_s - Block data
- *
  * @buffer: Data buffer
  * @len:    Data size (in bytes)
  */
@@ -86,7 +80,6 @@ typedef struct block_data_s
 
 /**
  * struct block_s - Block structure
- *
  * @info: Block info
  * @data: Block data
  * @hash: 256-bit digest of the Block, to ensure authenticity
@@ -107,7 +100,7 @@ typedef struct blockchain_s
 	llist_t     *chain;
 } blockchain_t;
 
-/* v0.1 */
+/* v0.1 - Data structures */
 blockchain_t *blockchain_create(void);
 block_t *block_create(
 	block_t const *prev, int8_t const *data, uint32_t data_len);
@@ -119,7 +112,7 @@ int blockchain_serialize(blockchain_t const *blockchain, char const *path);
 blockchain_t *blockchain_deserialize(char const *path);
 int block_is_valid(block_t const *block, block_t const *prev_block);
 
-/* v0.2 */
+/* v0.2 - Block mining */
 int hash_matches_difficulty(
 	uint8_t const hash[SHA256_DIGEST_LENGTH], uint32_t difficulty);
 void block_mine(block_t *block);
