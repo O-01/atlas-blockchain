@@ -1,10 +1,10 @@
 # Blockchain - Block mining
 ## Resources
 #### Read or watch:
-- [Everything you need to know - Block mining]()
-- [Provided libraries and sources]()
+- [Everything you need to know - Block mining](https://intranet.hbtn.io/concepts/945)
+- [Provided libraries and sources](https://github.com/hs-hq/holbertonschool-blockchain)
 ## Learning Objectives
-At the end of this project, you are expected to be able to [explain to anyone](), **without the help of Google**:
+At the end of this project, you are expected to be able to [explain to anyone](https://fs.blog/feynman-learning-technique/), **without the help of Google**:
 ### General
 - What is the purpose of the Block difficulty
 - What is the Proof of Work
@@ -14,18 +14,18 @@ At the end of this project, you are expected to be able to [explain to anyone]()
 - How to automatically adjust the difficulty
 ## Requirements
 ### General
-- Allowed editors: vi, vim, emacs
-- All your files will be compiled on Ubuntu 20.04 LTS
-- Your C programs and functions will be compiled with gcc 9.* using the flags -Wall -Werror -Wextra, -pedantic and the linker flags -lssl and -lcrypto
-- Your library libhblk_crypto.a, located in the crypto folder will be built and linked during correction
+- Allowed editors: `vi`, `vim`, `emacs`
+- All your files will be compiled on **Ubuntu 20.04 LTS**
+- Your C programs and functions will be compiled with `gcc 9.*` using the flags `-Wall` `-Werror` `-Wextra`, `-pedantic` **and the linker flags** `-lssl` and `-lcrypto`
+- Your library `libhblk_crypto.a`, located in the `crypto` folder will be built and linked during correction
 - All your files should end with a new line
-- A README.md file, at the root of the folder of the project, is mandatory
-- Your code should use the Betty style. It will be checked using betty-style.pl and betty-doc.pl
-- The prototypes of all your functions should be included in your header file called blockchain/v0.2/blockchain.h
+- A **README.md** file, at the root of the folder of the project, is mandatory
+- Your code should use the `Betty` style. It will be checked using [betty-style.pl](https://github.com/hs-hq/Betty/blob/main/betty-style.pl) and [betty-doc.pl](https://github.com/hs-hq/Betty/blob/main/betty-doc.pl)
+- The prototypes of all your functions should be included in your header file called `blockchain/v0.2/blockchain.h`
 - All your header files should be include guarded
 ## More Info
 ### Prerequisites
-- Create the folder blockchain/v0.2/ and copy the following files in it:
+- Create the folder `blockchain/v0.2/` and copy the following files in it:
     - blockchain/v0.1/blockchain_create.c
     - blockchain/v0.1/blockchain_deserialize.c
     - blockchain/v0.1/blockchain_destroy.c
@@ -36,13 +36,13 @@ At the end of this project, you are expected to be able to [explain to anyone]()
     - blockchain/v0.1/block_hash.c
     - blockchain/v0.1/block_is_valid.c
 
-- Modify your code so when a Blockchain is serialized, the version stored is 0.2
+- Modify your code so when a Blockchain is serialized, the version stored is `0.2`
 ### Data structures
-Please refer to the concept page linked to this project to get familiar with the different data structures used in this project.
+Please refer to the [concept page linked to this project](https://intranet.hbtn.io/concepts/945) to get familiar with the different data structures used in this project.
 ### Additional information
 - Unless specified otherwise, you are allowed to use the C standard library
 - You are free to use any data structure that suits you as long as their purpose is well defined
-- You are free to print any information on stderr, this stream will be discarded during correction. Since you are going to use these utility functions in your Blockchain project, you are free to manage errors as you wish.
+- You are free to print any information **on stderr**, this stream will be discarded during correction. Since you are going to use these utility functions in your Blockchain project, you are free to manage errors as you wish.
 - At the end of this project, the structure of your repository should look like this (you may have additional files):
 ```
 holbertonschool-blockchain
@@ -89,9 +89,9 @@ holbertonschool-blockchain
 #### 0. Proof of work
 Write a function that checks whether a given hash matches a given difficulty
 - Prototype: `int hash_matches_difficulty(uint8_t const hash[SHA256_DIGEST_LENGTH], uint32_t difficulty);`, where:
-    - hash is the hash to check
-    - difficulty is the minimum difficulty the hash should match
-- Your function must return 1 if the difficulty is respected, or 0 otherwise
+    - `hash` is the hash to check
+    - `difficulty` is the minimum difficulty the hash should match
+- Your function must return `1` if the difficulty is respected, or `0` otherwise
 - Refer to the concept page attached to this project to understand how the difficulty is represented in a hash
 ```
 alex@~/holbertonschool-blockchain/blockchain/v0.2$ cat test/hash_matches_difficulty-main.c
@@ -194,8 +194,8 @@ Modify the function `int block_is_valid(block_t const *block, block_t const *pre
 #### 2. Block mining
 Write a function that mines a Block in order to insert it in the Blockchain
 - Prototype: `void block_mine(block_t *block);`, where:
-    - block points to the Block to be mined
-- Your function must find a hash for block that matches its difficulty
+    - `block` points to the Block to be mined
+- Your function must find a hash for `block` that matches its difficulty
 ```
 alex@~/holbertonschool-blockchain/blockchain/v0.2$ cat test/block_mine-main.c
 #include <stdlib.h>
@@ -364,18 +364,18 @@ alex@~/holbertonschool-blockchain/blockchain/v0.2$
 #### 3. Adjust difficulty
 Write a function that computes the difficulty to assign to a potential next Block in the Blockchain.
 - Prototype: `uint32_t blockchain_difficulty(blockchain_t const *blockchain);`, where:
-    - blockchain points to the Blockchain to analyze
+    - `blockchain` points to the Blockchain to analyze
 - Your function must return the difficulty to be assigned to a potential next Block in the Blockchain
-- The following macros must be defined in your header file blockchain.h
-    - BLOCK_GENERATION_INTERVAL
-        - Value: 1 (Will be changed during correction)
+- The following macros must be defined in your header file `blockchain.h`
+    - **BLOCK_GENERATION_INTERVAL**
+        - Value: **1** (Will be changed during correction)
         - Defines how often (in seconds) a Block should be found
-    - DIFFICULTY_ADJUSTMENT_INTERVAL
-        - Value: 5 (Will be changed during correction)
+    - **DIFFICULTY_ADJUSTMENT_INTERVAL**
+        - Value: **5** (Will be changed during correction)
         - Defines how often (in Blocks) the difficulty should be adjusted
-- If the latest Block’s index is a multiple of DIFFICULTY_ADJUSTMENT_INTERVAL, AND that it is not the Genesis Block, the difficulty must be adjusted. Otherwise, the difficulty of the latest Block in blockchain is returned
+- If the latest Block’s index is a multiple of **DIFFICULTY_ADJUSTMENT_INTERVAL**, AND that it is not the Genesis Block, the difficulty must be adjusted. Otherwise, the difficulty of the latest Block in `blockchain` is returned
 - Difficulty adjustment:
-    - Retrieve the last Block for which an adjustment was made (the Block with index <blockchain_size> - DIFFICULTY_ADJUSTMENT_INTERVAL)
+    - Retrieve the last Block for which an adjustment was made (the Block with index `<blockchain_size> - DIFFICULTY_ADJUSTMENT_INTERVAL`)
     - Compute the expected elapsed time between the two Blocks
     - Compute the actual elapsed time
     - The difficulty must be incremented if the elapsed time is lower than half the expected elapsed time
