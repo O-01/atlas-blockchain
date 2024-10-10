@@ -20,7 +20,7 @@
 	"\x0c\x8e\x00\x09\xc8\x17\xf2\xb1\xd3\xd7\xff\x2f\x04\x51\x58\x03"
 
 #define HBLK "\x48\x42\x4c\x4b"
-#define VERS "\x30\x2e\x31" /* 0.1 */
+#define VERS "\x30\x2e\x32" /* 0.2 */
 #define GET_ENDIAN (_get_endianness())
 #define ENDIAN (GET_ENDIAN == 1 ? "\x01" : "\x02")
 
