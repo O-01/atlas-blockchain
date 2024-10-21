@@ -12,6 +12,7 @@
 #define OUT_SZ(x) ((x) * SHA256_DIGEST_LENGTH)
 
 #define OUT_HASH_ADDR(x) ((x) + sizeof(uint32_t) + EC_PUB_LEN)
+#define UTO_OUT_HASH_ADDR(x) (OUT_HASH_ADDR((x) + (SHA256_DIGEST_LENGTH * 2)))
 
 /**
  * struct transaction_s - Transaction structure
