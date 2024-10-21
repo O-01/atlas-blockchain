@@ -7,8 +7,8 @@
 
 #define COINBASE_AMOUNT 50
 
-#define TX_IN_HASH_BLK_SZ (SHA256_DIGEST_LENGTH * 3)
-#define IN_SZ(x) ((x) * TX_IN_HASH_BLK_SZ)
+#define IN_HASH_BLK_SZ (SHA256_DIGEST_LENGTH * 3)
+#define IN_SZ(x) ((x) * IN_HASH_BLK_SZ)
 #define OUT_SZ(x) ((x) * SHA256_DIGEST_LENGTH)
 
 #define OUT_HASH_ADDR(x) ((x) + sizeof(uint32_t) + EC_PUB_LEN)
