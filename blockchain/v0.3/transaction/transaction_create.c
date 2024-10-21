@@ -34,7 +34,7 @@ transaction_t *transaction_create(EC_KEY const *sender, EC_KEY const *receiver,
 	dat->sender_utos = llist_create(MT_SUPPORT_FALSE);
 	llist_for_each(all_unspent, get_sender_utos, dat);
 	if (dat->bal < amount)
-		return (free_proc(dat), NULL);
+		return (FREE_0(add), free_proc(dat), NULL);
 	add->inputs = llist_create(MT_SUPPORT_FALSE);
 	llist_for_each(dat->sender_utos, make_input, add->inputs);
 	add->outputs = llist_create(MT_SUPPORT_FALSE);
