@@ -12,7 +12,9 @@
 #define OUT_SZ(x) ((x) * SHA256_DIGEST_LENGTH)
 
 #define OUT_HASH_ADDR(x) ((x) + sizeof(uint32_t) + EC_PUB_LEN)
-#define UTO_OUT_HASH_ADDR(x) (OUT_HASH_ADDR((x) + (SHA256_DIGEST_LENGTH * 2)))
+#define UTO_OUT_ADDR(x) ((x) + (SHA256_DIGEST_LENGTH * 2))
+#define UTO_OUT_PUB_ADDR(x) (UTO_OUT_ADDR((x)) + sizeof(uint32_t))
+#define UTO_OUT_HASH_ADDR(x) (OUT_HASH_ADDR(UTO_OUT_ADDR((x))))
 
 /**
  * struct transaction_s - Transaction structure
@@ -81,6 +83,28 @@ typedef struct unspent_tx_out_s
 	uint8_t     tx_id[SHA256_DIGEST_LENGTH];
 	tx_out_t    out;
 } unspent_tx_out_t;
+
+/**
+ * struct tx_process_s - Transaction processing
+ *
+ * Description: This structure aids in the process of locating transaction
+ *              inputs and outputs based on sender's private key
+ *
+ * @sender_pub:  Sender's public key
+ * @bal:         Sender's remaining balance
+ * @sender:      Sender's private key
+ * @sender_utos: List of all unspent transaction outputs associated with
+ *               sender's private key
+ * @tx_id:       transaction ID
+ */
+typedef struct tx_process_s
+{
+	uint8_t         sender_pub[EC_PUB_LEN];
+	uint32_t        bal;
+	EC_KEY const    *sender;
+	llist_t         *sender_utos;
+	uint8_t         tx_id[SHA256_DIGEST_LENGTH];
+} tx_proc_t;
 
 tx_out_t *tx_out_create(uint32_t amount, uint8_t const pub[EC_PUB_LEN]);
 unspent_tx_out_t *unspent_tx_out_create(
