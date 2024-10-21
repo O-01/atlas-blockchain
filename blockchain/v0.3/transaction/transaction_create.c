@@ -2,7 +2,7 @@
 
 int get_sender_utos(llist_node_t node, unsigned int iter, void *dat);
 int make_input(llist_node_t node, unsigned int iter, void *inputs);
-int sign_input(llist_node_t node, unsigned int iter , void *dat);
+int sign_input(llist_node_t node, unsigned int iter, void *dat);
 void *free_proc(tx_proc_t *dat);
 
 /**
