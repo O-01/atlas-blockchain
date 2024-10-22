@@ -52,7 +52,8 @@ int verify_input(llist_node_t input, unsigned int iter, void *dat)
 	key = ec_from_pub(UTO(found)->out.pub);
 	if (!key)
 		return (1);
-	if (!ec_verify(key, DAT(dat)->tx_id, SHA256_DIGEST_LENGTH, &INPUT(input)->sig))
+	if (!ec_verify(key, DAT(dat)->tx_id, SHA256_DIGEST_LENGTH,
+		&INPUT(input)->sig))
 		return (EC_KEY_free(key), 1);
 	return (EC_KEY_free(key), 0);
 }
@@ -78,6 +79,7 @@ int input_match(llist_node_t uto, void *input)
  * @output: transaction output to to extract amount from
  * @iter: unused iterator
  * @out_total: total amount from all transaction outputs
+ * Return: always 0
  */
 int get_out_total(llist_node_t output, unsigned int iter, void *out_total)
 {
