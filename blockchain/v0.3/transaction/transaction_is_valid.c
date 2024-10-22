@@ -14,15 +14,18 @@ int transaction_is_valid(
 {
 	uint8_t sample[SHA256_DIGEST_LENGTH] = {0};
 	tx_proc_t dat = {0};
+	uint32_t ins = 0, outs = 0;
 
 	if (!transaction || !all_unspent)
 		return (0);
 	memcpy(dat.tx_id, transaction->id, SHA256_DIGEST_LENGTH);
 	dat.utos = all_unspent;
+	ins = llist_size(transaction->inputs);
+	outs = llist_size(transaction->outputs);
 	transaction_hash(transaction, sample);
 	if (!memcmp(transaction->id, sample, SHA256_DIGEST_LENGTH) &&
 		!llist_for_each(transaction->inputs, verify_input, &dat) &&
-		llist_size(transaction->inputs) == llist_size(transaction->outputs))
+		ins == outs)
 		return (1);
 	return (0);
 }
