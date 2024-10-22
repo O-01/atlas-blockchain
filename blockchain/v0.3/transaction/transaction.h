@@ -17,6 +17,7 @@
 #define UTO_OUT_HASH_ADDR(x) (OUT_HASH_ADDR(UTO_OUT_ADDR((x))))
 
 #define INPUT(x) (((tx_in_t *)(x)))
+#define OUT(x) (((tx_out_t *)(x)))
 #define UTO(x) (((unspent_tx_out_t *)(x)))
 
 #define DAT(x) (((tx_proc_t *)(x)))
