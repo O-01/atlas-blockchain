@@ -23,11 +23,11 @@ int transaction_is_valid(
 	ins = llist_size(transaction->inputs);
 	outs = llist_size(transaction->outputs);
 	transaction_hash(transaction, sample);
-	if (!memcmp(transaction->id, sample, SHA256_DIGEST_LENGTH) &&
-		!llist_for_each(transaction->inputs, verify_input, &dat) &&
-		ins == outs)
-		return (1);
-	return (0);
+	if (memcmp(transaction->id, sample, SHA256_DIGEST_LENGTH) ||
+		llist_for_each(transaction->inputs, verify_input, &dat) ||
+		ins != outs)
+		return (0);
+	return (1);
 }
 
 /**
