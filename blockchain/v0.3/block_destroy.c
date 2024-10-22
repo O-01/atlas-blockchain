@@ -8,7 +8,6 @@ void block_destroy(block_t *block)
 {
 	if (!block)
 		return;
-	if (block->transactions)
-		llist_destroy(block->transactions, 1, (node_dtor_t)&transaction_destroy);
+	llist_destroy(block->transactions, 1, (node_dtor_t)&transaction_destroy);
 	FREE_0(block);
 }

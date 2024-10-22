@@ -18,6 +18,7 @@ blockchain_t *blockchain_create(void)
 	add->chain = llist_create(MT_SUPPORT_FALSE);
 	if (!add->chain)
 		return (FREE_0(add));
+	add->unspent = llist_create(MT_SUPPORT_FALSE);
 	block = calloc(1, sizeof(block_t));
 	if (!block)
 		return (llist_destroy(add->chain, 0, NULL), FREE_0(add));
