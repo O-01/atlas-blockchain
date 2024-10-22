@@ -18,16 +18,16 @@ int transaction_is_valid(
 
 	if (!transaction || !all_unspent)
 		return (0);
-	memcpy(dat.tx_id, transaction->id, SHA256_DIGEST_LENGTH);
-	dat.utos = all_unspent;
+	transaction_hash(transaction, sample);
+	if (memcmp(transaction->id, sample, SHA256_DIGEST_LENGTH))
+		return (0);
 	ins = llist_size(transaction->inputs);
 	outs = llist_size(transaction->outputs);
-	transaction_hash(transaction, sample);
-	if (memcmp(transaction->id, sample, SHA256_DIGEST_LENGTH) ||
-		llist_for_each(transaction->inputs, verify_input, &dat) ||
-		ins != outs)
+	if (ins != outs)
 		return (0);
-	return (1);
+	memcpy(dat.tx_id, transaction->id, SHA256_DIGEST_LENGTH);
+	dat.utos = all_unspent;
+	return (!llist_for_each(transaction->inputs, verify_input, &dat));
 }
 
 /**
