@@ -16,6 +16,7 @@
 #define UTO_OUT_PUB_ADDR(x) (UTO_OUT_ADDR((x)) + sizeof(uint32_t))
 #define UTO_OUT_HASH_ADDR(x) (OUT_HASH_ADDR(UTO_OUT_ADDR((x))))
 
+#define TX(x) (((transaction_t *)(x)))
 #define INPUT(x) (((tx_in_t *)(x)))
 #define OUT(x) (((tx_out_t *)(x)))
 #define UTO(x) (((unspent_tx_out_t *)(x)))
