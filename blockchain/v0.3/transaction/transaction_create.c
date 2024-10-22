@@ -1,6 +1,6 @@
 #include "blockchain.h"
 
-int get_sender_utos(llist_node_t node, unsigned int iter, void *dat);
+int get_utos(llist_node_t node, unsigned int iter, void *dat);
 int make_input(llist_node_t node, unsigned int iter, void *inputs);
 int sign_input(llist_node_t node, unsigned int iter, void *dat);
 void *free_proc(tx_proc_t *dat);
@@ -31,12 +31,12 @@ transaction_t *transaction_create(EC_KEY const *sender, EC_KEY const *receiver,
 	ec_to_pub(sender, dat->sender_pub), ec_to_pub(receiver, rec_pub);
 	dat->bal = 0;
 	dat->sender = sender;
-	dat->sender_utos = llist_create(MT_SUPPORT_FALSE);
-	llist_for_each(all_unspent, get_sender_utos, dat);
+	dat->utos = llist_create(MT_SUPPORT_FALSE);
+	llist_for_each(all_unspent, get_utos, dat);
 	if (dat->bal < amount)
 		return (FREE_0(add), free_proc(dat), NULL);
 	add->inputs = llist_create(MT_SUPPORT_FALSE);
-	llist_for_each(dat->sender_utos, make_input, add->inputs);
+	llist_for_each(dat->utos, make_input, add->inputs);
 	add->outputs = llist_create(MT_SUPPORT_FALSE);
 	llist_add_node(add->outputs, tx_out_create(amount, rec_pub), ADD_NODE_REAR);
 	dat->bal -= amount;
@@ -50,19 +50,19 @@ transaction_t *transaction_create(EC_KEY const *sender, EC_KEY const *receiver,
 }
 
 /**
- * get_sender_utos - retrieves all unspent transaction outputs that match
+ * get_utos - retrieves all unspent transaction outputs that match
  *                   sender's public key
  * @node: unspent transaction output node
  * @iter: unused iterator
  * @dat: transaction processing data struct
  * Return: always 0
  */
-int get_sender_utos(llist_node_t node, unsigned int iter, void *dat)
+int get_utos(llist_node_t node, unsigned int iter, void *dat)
 {
 	(void)iter;
 	if (!memcmp(UTO_OUT_PUB_ADDR((uint8_t *)node), (uint8_t *)dat, EC_PUB_LEN))
 	{
-		llist_add_node(((tx_proc_t *)dat)->sender_utos, node, ADD_NODE_REAR);
+		llist_add_node(((tx_proc_t *)dat)->utos, node, ADD_NODE_REAR);
 		((tx_proc_t *)dat)->bal += ((unspent_tx_out_t *)node)->out.amount;
 	}
 	return (0);
@@ -94,7 +94,7 @@ int sign_input(llist_node_t node, unsigned int iter, void *dat)
 {
 	(void)iter;
 	tx_in_sign((tx_in_t *)node, ((tx_proc_t *)dat)->tx_id,
-		((tx_proc_t *)dat)->sender, ((tx_proc_t *)dat)->sender_utos);
+		((tx_proc_t *)dat)->sender, ((tx_proc_t *)dat)->utos);
 	return (0);
 }
 
@@ -107,8 +107,8 @@ void *free_proc(tx_proc_t *dat)
 {
 	if (!dat)
 		return (NULL);
-	if (dat->sender_utos)
-		llist_destroy(dat->sender_utos, 0, NULL);
+	if (dat->utos)
+		llist_destroy(dat->utos, 0, NULL);
 	FREE_0(dat);
 	return (NULL);
 }

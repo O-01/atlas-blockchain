@@ -16,6 +16,11 @@
 #define UTO_OUT_PUB_ADDR(x) (UTO_OUT_ADDR((x)) + sizeof(uint32_t))
 #define UTO_OUT_HASH_ADDR(x) (OUT_HASH_ADDR(UTO_OUT_ADDR((x))))
 
+#define INPUT(x) (((tx_in_t *)(x)))
+#define UTO(x) (((unspent_tx_out_t *)(x)))
+
+#define DAT(x) (((tx_proc_t *)(x)))
+
 /**
  * struct transaction_s - Transaction structure
  *
@@ -93,7 +98,7 @@ typedef struct unspent_tx_out_s
  * @sender_pub:  Sender's public key
  * @bal:         Sender's remaining balance
  * @sender:      Sender's private key
- * @sender_utos: List of all unspent transaction outputs associated with
+ * @utos:        List of all unspent transaction outputs associated with
  *               sender's private key
  * @tx_id:       transaction ID
  */
@@ -102,7 +107,7 @@ typedef struct tx_process_s
 	uint8_t         sender_pub[EC_PUB_LEN];
 	uint32_t        bal;
 	EC_KEY const    *sender;
-	llist_t         *sender_utos;
+	llist_t         *utos;
 	uint8_t         tx_id[SHA256_DIGEST_LENGTH];
 } tx_proc_t;
 
