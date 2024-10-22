@@ -27,5 +27,6 @@ block_t *block_create(
 		memcpy(dat.buffer, data, MIN(data_len, BLOCKCHAIN_DATA_MAX));
 	add->data = dat;
 	memset(add->hash, '\x0', SHA256_DIGEST_LENGTH);
+	add->transactions = llist_create(MT_SUPPORT_FALSE);
 	return (add);
 }
