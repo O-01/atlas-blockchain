@@ -42,8 +42,8 @@
 #define ACTUAL(x, y) ((x)->info.timestamp - (y)->info.timestamp)
 
 #define BASE_LEN(x) (sizeof(block_info_t) + (x)->data.len)
-#define TX_ID_TOT(x) (llist_size((x)) * SHA256_DIGEST_LENGTH)
-#define TX_IDX(x) ((x) * SHA256_DIGEST_LENGTH)
+#define TX_ID_TOT(x) ((x) * SHA256_DIGEST_LENGTH)
+#define TX_IDX(x) TX_ID_TOT((x))
 
 /**
  * struct block_info_s - Block info structure

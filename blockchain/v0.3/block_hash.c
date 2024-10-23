@@ -12,12 +12,14 @@ uint8_t *block_hash(
 	block_t const *block, uint8_t hash_buf[SHA256_DIGEST_LENGTH])
 {
 	uint8_t *buff = NULL;
-	uint64_t base_len = 0, expect_len = 0;
+	uint64_t tx_count = 0, base_len = 0, expect_len = 0;
 
 	if (!block || !hash_buf)
 		return (NULL);
-	expect_len = (base_len = BASE_LEN(block)) + TX_ID_TOT(block->transactions);
-	buff = calloc(1, base_len + TX_ID_TOT(block->transactions));
+	if (block->transactions)
+		tx_count = llist_size(block->transactions);
+	expect_len = (base_len = BASE_LEN(block)) + TX_ID_TOT(tx_count);
+	buff = calloc(1, expect_len);
 	if (!buff)
 		return (NULL);
 	memcpy(buff, block, base_len);
