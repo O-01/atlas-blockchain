@@ -1,6 +1,6 @@
 #include "blockchain.h"
 
-int add_tx(llist_node_t tx, unsigned int iter, void *buff);
+static int add_tx(transaction_t *tx, uint32_t iter, uint8_t *buff);
 
 /**
  * block_hash - computes hash of Block
@@ -24,7 +24,7 @@ uint8_t *block_hash(
 		return (NULL);
 	memcpy(buff, block, base_len);
 	if (block->transactions && llist_size(block->transactions))
-		llist_for_each(block->transactions, add_tx, &buff[base_len]);
+		llist_for_each(block->transactions, (node_func_t)&add_tx, &buff[base_len]);
 	SHA256(buff, expect_len, hash_buf);
 	FREE_0(buff);
 	return (hash_buf);
@@ -37,8 +37,8 @@ uint8_t *block_hash(
  * @buff: buffer for insertion of transaction ID
  * Return: always 0
  */
-int add_tx(llist_node_t tx, unsigned int iter, void *buff)
+static int add_tx(transaction_t *tx, uint32_t iter, uint8_t *buff)
 {
-	memcpy(&((uint8_t *)buff)[TX_IDX(iter)], TX(tx)->id, SHA256_DIGEST_LENGTH);
+	memcpy(&buff[TX_IDX(iter)], tx->id, SHA256_DIGEST_LENGTH);
 	return (0);
 }

@@ -1,6 +1,6 @@
 #include "transaction.h"
 
-int get_out(llist_node_t node, void *buff);
+static int get_uto(unspent_tx_out_t *uto, uint8_t *buff);
 
 /**
  * tx_in_sign - signs transaction input, given transaction id it is from
@@ -23,7 +23,7 @@ sig_t *tx_in_sign(
 
 	if (!in || !tx_id || !sender || !all_unspent)
 		return (NULL);
-	uto = llist_find_node(all_unspent, get_out, in->tx_out_hash);
+	uto = llist_find_node(all_unspent, (node_ident_t)&get_uto, in->tx_out_hash);
 	if (!uto)
 		return (NULL);
 	ec_to_pub(sender, pub);
@@ -34,15 +34,15 @@ sig_t *tx_in_sign(
 }
 
 /**
- * get_out - callback for locating unspent transaction output with matching
+ * get_uto - callback for locating unspent transaction output with matching
  *           output hash
- * @node: unspent transaction output node
+ * @uto: unspent transaction output node
  * @buff: buff containing hash that must be matched
  * Return: 1 if output hash matches hash from buff, otherwise 0
  */
-int get_out(llist_node_t node, void *buff)
+static int get_uto(unspent_tx_out_t *uto, uint8_t *buff)
 {
-	if (!memcmp(UTO_OUT_HASH_ADDR((uint8_t *)node), buff, SHA256_DIGEST_LENGTH))
+	if (!memcmp(uto->out.hash, buff, SHA256_DIGEST_LENGTH))
 		return (1);
 	return (0);
 }

@@ -1,7 +1,8 @@
 #include "blockchain.h"
 
 static int is_genesis(block_t const *block);
-int tx_valid(llist_node_t tx, unsigned int iter, void *all_utos);
+static int tx_valid(transaction_t *tx, uint32_t iter, llist_t *all_utos);
+
 void _print_hex_buffer(uint8_t const *buf, size_t len);
 
 /**
@@ -19,7 +20,6 @@ int block_is_valid(
 	uint8_t current_hash[SHA256_DIGEST_LENGTH] = {0};
 	int valid_cb = 0;
 
-	(void)all_unspent;
 	if (!block || (!prev_block && block->info.index) ||
 		(prev_block && block->info.index != prev_block->info.index + 1) ||
 		!hash_matches_difficulty(block->hash, block->info.difficulty))
@@ -32,7 +32,7 @@ int block_is_valid(
 	return (!(!memcmp(prev_block->hash, prev_hash, SHA256_DIGEST_LENGTH) &&
 		!memcmp(block->info.prev_hash, prev_hash, SHA256_DIGEST_LENGTH) &&
 		!memcmp(block->hash, current_hash, SHA256_DIGEST_LENGTH) &&
-		!llist_for_each(block->transactions, tx_valid, all_unspent) &&
+		!llist_for_each(block->transactions, (node_func_t)&tx_valid, all_unspent) &&
 		valid_cb));
 }
 
@@ -57,9 +57,9 @@ static int is_genesis(block_t const *block)
  * @all_utos: pointer to list of all unspent transaction outputs to date
  * Return: 0 upon success, otherwise 1
  */
-int tx_valid(llist_node_t tx, unsigned int iter, void *all_utos)
+static int tx_valid(transaction_t *tx, uint32_t iter, llist_t *all_utos)
 {
-	if (iter && !transaction_is_valid(TX(tx), (llist_t *)all_utos))
+	if (iter && !transaction_is_valid(tx, all_utos))
 		return (1);
 	return (0);
 }

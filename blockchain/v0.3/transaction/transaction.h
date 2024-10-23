@@ -113,6 +113,23 @@ typedef struct tx_process_s
 	uint8_t         tx_id[SHA256_DIGEST_LENGTH];
 } tx_proc_t;
 
+/**
+ * struct tx_uto_update_s - Unspent transaction output list update
+ *
+ * Description: This structure aids in the process of updating unspent
+ *              transaction outputs
+ *
+ * @block_hash:  Hash of validated Block that contains transaction list
+ *               transactions
+ * @all_utos:    List of unspent transaction outputs
+ */
+typedef struct tx_uto_update_s
+{
+	uint8_t         block_hash[SHA256_DIGEST_LENGTH];
+	uint8_t         tx_id[SHA256_DIGEST_LENGTH];
+	llist_t         *all_utos;
+} uto_up_t;
+
 tx_out_t *tx_out_create(uint32_t amount, uint8_t const pub[EC_PUB_LEN]);
 unspent_tx_out_t *unspent_tx_out_create(
 	uint8_t block_hash[SHA256_DIGEST_LENGTH],

@@ -1,8 +1,8 @@
 #include "transaction.h"
 
-int verify_input(llist_node_t input, unsigned int iter, void *utos);
-int input_match(llist_node_t uto, void *input);
-int get_out_total(llist_node_t output, unsigned int iter, void *out_total);
+static int verify_input(tx_in_t *input, uint32_t iter, tx_proc_t *dat);
+static int input_match(unspent_tx_out_t *uto, tx_in_t *input);
+static int get_out_total(tx_out_t *output, uint32_t iter, uint32_t *out_total);
 
 /**
  * transaction_is_valid - checks whether transaction is valid
@@ -23,9 +23,9 @@ int transaction_is_valid(
 	memcpy(dat.tx_id, transaction->id, SHA256_DIGEST_LENGTH);
 	dat.utos = all_unspent;
 	if (memcmp(transaction->id, sample, SHA256_DIGEST_LENGTH) ||
-		llist_for_each(transaction->inputs, verify_input, &dat))
+		llist_for_each(transaction->inputs, (node_func_t)&verify_input, &dat))
 		return (0);
-	llist_for_each(transaction->outputs, get_out_total, &out_total);
+	llist_for_each(transaction->outputs, (node_func_t)&get_out_total, &out_total);
 	if (dat.bal != out_total)
 		return (0);
 	return (1);
@@ -39,22 +39,21 @@ int transaction_is_valid(
  *       transaction output against which transaction input verified
  * Return: 0 upon successful verification, otherwise 1
  */
-int verify_input(llist_node_t input, unsigned int iter, void *dat)
+static int verify_input(tx_in_t *input, uint32_t iter, tx_proc_t *dat)
 {
 	unspent_tx_out_t *found = NULL;
 	EC_KEY *key = NULL;
 
 	(void)iter;
-	found = llist_find_node(DAT(dat)->utos, input_match, input);
+	found = llist_find_node(dat->utos, (node_ident_t)&input_match, input);
 	if (!found)
 		return (1);
-	DAT(dat)->bal += found->out.amount;
-	key = ec_from_pub(UTO(found)->out.pub);
+	key = ec_from_pub(found->out.pub);
 	if (!key)
 		return (1);
-	if (!ec_verify(key, DAT(dat)->tx_id, SHA256_DIGEST_LENGTH,
-		&INPUT(input)->sig))
+	if (!ec_verify(key, dat->tx_id, SHA256_DIGEST_LENGTH, &input->sig))
 		return (EC_KEY_free(key), 1);
+	dat->bal += found->out.amount;
 	return (EC_KEY_free(key), 0);
 }
 
@@ -64,12 +63,11 @@ int verify_input(llist_node_t input, unsigned int iter, void *dat)
  * @input: transaction input against which unspent transaction output verified
  * Return: 1 if match found, otherwise 0
  */
-int input_match(llist_node_t uto, void *input)
+static int input_match(unspent_tx_out_t *uto, tx_in_t *input)
 {
-	if (!memcmp(UTO(uto)->block_hash, INPUT(input)->block_hash,
-			SHA256_DIGEST_LENGTH) &&
-		!memcmp(UTO(uto)->tx_id, INPUT(input)->tx_id, SHA256_DIGEST_LENGTH) &&
-		!memcmp(UTO(uto)->out.hash, INPUT(input)->tx_out_hash, SHA256_DIGEST_LENGTH))
+	if (!memcmp(uto->block_hash, input->block_hash, SHA256_DIGEST_LENGTH) &&
+		!memcmp(uto->tx_id, input->tx_id, SHA256_DIGEST_LENGTH) &&
+		!memcmp(uto->out.hash, input->tx_out_hash, SHA256_DIGEST_LENGTH))
 		return (1);
 	return (0);
 }
@@ -81,9 +79,9 @@ int input_match(llist_node_t uto, void *input)
  * @out_total: total amount from all transaction outputs
  * Return: always 0
  */
-int get_out_total(llist_node_t output, unsigned int iter, void *out_total)
+static int get_out_total(tx_out_t *output, uint32_t iter, uint32_t *out_total)
 {
 	(void)iter;
-	*((uint32_t *)out_total) += OUT(output)->amount;
+	*out_total += output->amount;
 	return (0);
 }
