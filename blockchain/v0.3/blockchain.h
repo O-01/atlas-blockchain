@@ -41,6 +41,11 @@
 	((x)->info.index - (y)->info.index) * BLOCK_GENERATION_INTERVAL)
 #define ACTUAL(x, y) ((x)->info.timestamp - (y)->info.timestamp)
 
+#define BM(x) (((blk_mem_t *)(x)))
+#define BM_BASE_LEN(x) (sizeof(block_info_t) + (x)->data.len)
+#define TX_ID_TOT(x) (llist_size((x)) * SHA256_DIGEST_LENGTH)
+#define TX_IDX(x) ((x) * SHA256_DIGEST_LENGTH)
+
 /**
  * struct block_info_s - Block info structure
  * @index:      Index of the Block in the Blockchain
@@ -105,6 +110,21 @@ typedef struct blockchain_s
 	llist_t     *chain;
 	llist_t     *unspent;
 } blockchain_t;
+
+/**
+ * struct block_memory_s - stores data related to memory necessary for hashing
+ *                         of a block
+ * @buff: buffer to store all memory necessary for block hash
+ * @buff_len: length of block info plus data len and SHA256 length multiplied
+ *            by number of transactions
+ * @base_len: length of block info plus data len (to beginning of transactions)
+ */
+typedef struct block_memory_s
+{
+	uint8_t     *buff;
+	uint64_t    buff_len;
+	uint64_t    base_len;
+} blk_mem_t;
 
 /* v0.1 - Data structures */
 blockchain_t *blockchain_create(void);
