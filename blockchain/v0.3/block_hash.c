@@ -1,6 +1,6 @@
 #include "blockchain.h"
 
-int add_tx(llist_node_t tx, unsigned int iter, void *mem);
+int add_tx(llist_node_t tx, unsigned int iter, void *buff);
 
 /**
  * block_hash - computes hash of Block
@@ -11,30 +11,32 @@ int add_tx(llist_node_t tx, unsigned int iter, void *mem);
 uint8_t *block_hash(
 	block_t const *block, uint8_t hash_buf[SHA256_DIGEST_LENGTH])
 {
-	blk_mem_t mem = {0};
+	uint8_t *buff = NULL;
+	uint64_t base_len = 0, expect_len = 0;
 
 	if (!block || !hash_buf)
 		return (NULL);
-	mem.base_len = BM_BASE_LEN(block);
-	mem.buff_len = mem.base_len + TX_ID_TOT(block->transactions);
-	mem.buff = calloc(1, mem.buff_len);
+	expect_len = (base_len = BASE_LEN(block)) + TX_ID_TOT(block->transactions);
+	buff = calloc(1, base_len + TX_ID_TOT(block->transactions));
+	if (!buff)
+		return (NULL);
+	memcpy(buff, block, base_len);
 	if (block->transactions && llist_size(block->transactions))
-		llist_for_each(block->transactions, add_tx, &mem);
-	SHA256(mem.buff, mem.buff_len, hash_buf);
-	FREE_0(mem.buff);
+		llist_for_each(block->transactions, add_tx, &buff[base_len]);
+	SHA256(buff, expect_len, hash_buf);
+	FREE_0(buff);
 	return (hash_buf);
 }
 
 /**
- * add_tx - adds transaction data to block memory buffer for hashing
+ * add_tx - adds transaction data to buffer for hashing
  * @tx: transaction data node
  * @iter: index of transaction within transaction list
- * @mem: memory structure containing buffer for insertion of transaction ID
+ * @buff: buffer for insertion of transaction ID
  * Return: always 0
  */
-int add_tx(llist_node_t tx, unsigned int iter, void *mem)
+int add_tx(llist_node_t tx, unsigned int iter, void *buff)
 {
-	memcpy(&BM(mem)->buff[BM(mem)->base_len + TX_IDX(iter)],
-		TX(tx)->id, SHA256_DIGEST_LENGTH);
+	memcpy(&((uint8_t *)buff)[TX_IDX(iter)], TX(tx)->id, SHA256_DIGEST_LENGTH);
 	return (0);
 }
