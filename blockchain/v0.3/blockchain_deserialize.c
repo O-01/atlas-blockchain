@@ -136,7 +136,11 @@ static uint8_t load_in(transaction_t *tx, uint32_t count, FILE *stream)
 		in = calloc(1, sizeof(tx_in_t));
 		if (!in)
 			return (1);
-		fread(in, sizeof(tx_in_t), 1, stream);
+		fread(in->block_hash, SHA256_DIGEST_LENGTH, 1, stream);
+		fread(in->tx_id, SHA256_DIGEST_LENGTH, 1, stream);
+		fread(in->tx_out_hash, SHA256_DIGEST_LENGTH, 1, stream);
+		fread(in->sig.sig, SIG_MAX_LEN, 1, stream);
+		fread(&in->sig.len, sizeof(uint8_t), 1, stream);
 		llist_add_node(tx->inputs, in, ADD_NODE_REAR);
 	}
 	return (0);
@@ -162,7 +166,9 @@ static uint8_t load_out(transaction_t *tx, uint32_t count, FILE *stream)
 		out = calloc(1, sizeof(tx_out_t));
 		if (!out)
 			return (1);
-		fread(out, sizeof(tx_out_t), 1, stream);
+		fread(&out->amount, sizeof(uint32_t), 1, stream);
+		fread(out->pub, EC_PUB_LEN, 1, stream);
+		fread(out->hash, SHA256_DIGEST_LENGTH, 1, stream);
 		llist_add_node(tx->outputs, out, ADD_NODE_REAR);
 	}
 	return (0);
@@ -188,7 +194,11 @@ static uint8_t load_utos(blockchain_t *bc, uint32_t count, FILE *stream)
 		uto = calloc(1, sizeof(unspent_tx_out_t));
 		if (!uto)
 			return (1);
-		fread(uto, sizeof(unspent_tx_out_t), 1, stream);
+		fread(uto->block_hash, SHA256_DIGEST_LENGTH, 1, stream);
+		fread(uto->tx_id, SHA256_DIGEST_LENGTH, 1, stream);
+		fread(&uto->out.amount, sizeof(uint32_t), 1, stream);
+		fread(uto->out.pub, EC_PUB_LEN, 1, stream);
+		fread(uto->out.hash, SHA256_DIGEST_LENGTH, 1, stream);
 		llist_add_node(bc->unspent, uto, ADD_NODE_REAR);
 	}
 	return (0);

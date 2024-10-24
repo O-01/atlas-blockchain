@@ -110,8 +110,13 @@ static int write_in(tx_in_t *in, uint32_t index, FILE *stream)
 	(void)index;
 	if (IS_BIG_ENDIAN)
 		SWAPENDIAN(in);
-	memcpy(&buf[len], in, sizeof(tx_in_t));
-	fwrite(buf, len += sizeof(tx_in_t), 1, stream);
+	memcpy(&buf[len], in->block_hash, SHA256_DIGEST_LENGTH);
+	memcpy(&buf[len += SHA256_DIGEST_LENGTH], in->tx_id, SHA256_DIGEST_LENGTH);
+	memcpy(&buf[len += SHA256_DIGEST_LENGTH], in->tx_out_hash,
+		SHA256_DIGEST_LENGTH);
+	memcpy(&buf[len += SHA256_DIGEST_LENGTH], in->sig.sig, SIG_MAX_LEN);
+	memcpy(&buf[len += SIG_MAX_LEN], &in->sig.len, sizeof(uint8_t));
+	fwrite(buf, len += sizeof(uint8_t), 1, stream);
 	return (0);
 }
 
@@ -132,8 +137,10 @@ static int write_out(tx_out_t *out, uint32_t index, FILE *stream)
 	(void)index;
 	if (IS_BIG_ENDIAN)
 		SWAPENDIAN(out);
-	memcpy(&buf[len], out, sizeof(tx_out_t));
-	fwrite(buf, len += sizeof(tx_out_t), 1, stream);
+	memcpy(&buf[len], &out->amount, sizeof(uint32_t));
+	memcpy(&buf[len += sizeof(uint32_t)], out->pub, EC_PUB_LEN);
+	memcpy(&buf[len += EC_PUB_LEN], out->hash, SHA256_DIGEST_LENGTH);
+	fwrite(buf, len += SHA256_DIGEST_LENGTH, 1, stream);
 	return (0);
 }
 
@@ -154,7 +161,11 @@ static int write_uto(unspent_tx_out_t *uto, uint32_t index, FILE *stream)
 	(void)index;
 	if (IS_BIG_ENDIAN)
 		SWAPENDIAN(uto);
-	memcpy(&buf[len], uto, sizeof(unspent_tx_out_t));
-	fwrite(buf, len += sizeof(unspent_tx_out_t), 1, stream);
+	memcpy(&buf[len], uto->block_hash, SHA256_DIGEST_LENGTH);
+	memcpy(&buf[len += SHA256_DIGEST_LENGTH], uto->tx_id, SHA256_DIGEST_LENGTH);
+	memcpy(&buf[len += SHA256_DIGEST_LENGTH], &uto->out.amount, sizeof(uint32_t));
+	memcpy(&buf[len += sizeof(uint32_t)], uto->out.pub, EC_PUB_LEN);
+	memcpy(&buf[len += EC_PUB_LEN], uto->out.hash, SHA256_DIGEST_LENGTH);
+	fwrite(buf, len += SHA256_DIGEST_LENGTH, 1, stream);
 	return (0);
 }
