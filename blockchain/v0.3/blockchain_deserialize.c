@@ -71,7 +71,7 @@ static uint8_t load_blocks(blockchain_t *bc, uint32_t count, FILE *stream)
 		fread(block->hash, SHA256_DIGEST_LENGTH, 1, stream);
 		fread(&tx_count, sizeof(uint32_t), 1, stream);
 		block->transactions = llist_create(MT_SUPPORT_FALSE);
-		if (iter && load_tx(block, tx_count, stream))
+		if (tx_count && load_tx(block, tx_count, stream))
 			return (1);
 		llist_add_node(bc->chain, block, ADD_NODE_REAR);
 	}
