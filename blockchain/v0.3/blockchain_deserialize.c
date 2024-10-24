@@ -35,12 +35,12 @@ blockchain_t *blockchain_deserialize(char const *path)
 	blockchain->chain = llist_create(MT_SUPPORT_FALSE);
 	if (!blockchain->chain)
 		return (blockchain_destroy(blockchain), fclose(stream), NULL);
-	blockchain->unspent = llist_create(MT_SUPPORT_FALSE);
-	if (!blockchain->unspent)
-		return (blockchain_destroy(blockchain), fclose(stream), NULL);
 	fread(&block_count, sizeof(uint32_t), 1, stream);
 	fread(&uto_count, sizeof(uint32_t), 1, stream);
 	if (load_blocks(blockchain, block_count, stream))
+		return (blockchain_destroy(blockchain), fclose(stream), NULL);
+	blockchain->unspent = llist_create(MT_SUPPORT_FALSE);
+	if (!blockchain->unspent)
 		return (blockchain_destroy(blockchain), fclose(stream), NULL);
 	if (load_utos(blockchain, uto_count, stream))
 		return (blockchain_destroy(blockchain), fclose(stream), NULL);
@@ -48,18 +48,23 @@ blockchain_t *blockchain_deserialize(char const *path)
 	return (blockchain);
 }
 
+void _print_hex_buffer(uint8_t const *buf, size_t len);
+
 /**
  * load_blocks - deserialize blocks from file
  * @bc: blockchain data structure containing list of blocks to load into
  * @count: number of expected blocks to be loaded
  * @stream: file stream from which to read data
- * Return: 0 upon success, otherwise -1 upon memory allocation failure
+ * Return: 0 upon success, otherwise 1
  */
 static uint8_t load_blocks(blockchain_t *bc, uint32_t count, FILE *stream)
 {
-	uint32_t iter = 0, tx_count = 0;
+	uint32_t iter = 0;
+	int32_t tx_count = 0;
 	block_t *block = NULL;
 
+	if (!bc || !count || !stream)
+		return (1);
 	for (; iter < count; ++iter)
 	{
 		block = calloc(1, sizeof(block_t));
@@ -69,10 +74,10 @@ static uint8_t load_blocks(blockchain_t *bc, uint32_t count, FILE *stream)
 		fread(&block->data.len, sizeof(uint32_t), 1, stream);
 		fread(block->data.buffer, block->data.len, 1, stream);
 		fread(block->hash, SHA256_DIGEST_LENGTH, 1, stream);
-		fread(&tx_count, sizeof(uint32_t), 1, stream);
-		block->transactions = llist_create(MT_SUPPORT_FALSE);
-		if (iter && tx_count && load_tx(block, tx_count, stream))
-			return (1);
+		fread(&tx_count, sizeof(int32_t), 1, stream);
+		if (tx_count >= 0)
+			block->transactions = llist_create(MT_SUPPORT_FALSE),
+			load_tx(block, tx_count, stream);
 		llist_add_node(bc->chain, block, ADD_NODE_REAR);
 	}
 	return (0);
@@ -83,13 +88,15 @@ static uint8_t load_blocks(blockchain_t *bc, uint32_t count, FILE *stream)
  * @block: block data structure containing list of transactions to load into
  * @count: number of expected transactions to be loaded
  * @stream: file stream from which to read data
- * Return: 0 upon success, otherwise -1 upon memory allocation failure
+ * Return: 0 upon success, otherwise 1
  */
 static uint8_t load_tx(block_t *block, uint32_t count, FILE *stream)
 {
 	uint32_t iter = 0, in_count = 0, out_count = 0;
 	transaction_t *tx = NULL;
 
+	if (!block || !count || !stream)
+		return (1);
 	for (; iter < count; ++iter)
 	{
 		tx = calloc(1, sizeof(transaction_t));
@@ -100,7 +107,9 @@ static uint8_t load_tx(block_t *block, uint32_t count, FILE *stream)
 		fread(&out_count, sizeof(uint32_t), 1, stream);
 		tx->inputs = llist_create(MT_SUPPORT_FALSE);
 		tx->outputs = llist_create(MT_SUPPORT_FALSE);
-		if (load_in(tx, in_count, stream) || load_out(tx, out_count, stream))
+		if (load_in(tx, in_count, stream))
+			return (1);
+		if (load_out(tx, out_count, stream))
 			return (1);
 		llist_add_node(block->transactions, tx, ADD_NODE_REAR);
 	}
@@ -113,13 +122,15 @@ static uint8_t load_tx(block_t *block, uint32_t count, FILE *stream)
  *      load into
  * @count: number of expected transaction inputs to be loaded
  * @stream: file stream from which to read data
- * Return: 0 upon success, otherwise -1 upon memory allocation failure
+ * Return: 0 upon success, otherwise 1
  */
 static uint8_t load_in(transaction_t *tx, uint32_t count, FILE *stream)
 {
 	uint32_t iter = 0;
 	tx_in_t *in = NULL;
 
+	if (!tx || !count || !stream)
+		return (1);
 	for (; iter < count; ++iter)
 	{
 		in = calloc(1, sizeof(tx_in_t));
@@ -141,13 +152,15 @@ static uint8_t load_in(transaction_t *tx, uint32_t count, FILE *stream)
  *      load into
  * @count: number of expected transaction outputs to be loaded
  * @stream: file stream from which to read data
- * Return: 0 upon success, otherwise -1 upon memory allocation failure
+ * Return: 0 upon success, otherwise 1
  */
 static uint8_t load_out(transaction_t *tx, uint32_t count, FILE *stream)
 {
 	uint32_t iter = 0;
 	tx_out_t *out = NULL;
 
+	if (!tx || !count || !stream)
+		return (1);
 	for (; iter < count; ++iter)
 	{
 		out = calloc(1, sizeof(tx_out_t));
@@ -174,6 +187,8 @@ static uint8_t load_utos(blockchain_t *bc, uint32_t count, FILE *stream)
 	uint32_t iter = 0;
 	unspent_tx_out_t *uto = NULL;
 
+	if (!bc || !count || !stream)
+		return (1);
 	for (; iter < count; ++iter)
 	{
 		uto = calloc(1, sizeof(unspent_tx_out_t));

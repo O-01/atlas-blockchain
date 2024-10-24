@@ -45,7 +45,8 @@ int blockchain_serialize(blockchain_t const *blockchain, char const *path)
 static int write_block(block_t *block, uint32_t index, FILE *stream)
 {
 	uint8_t buf[1120] = {0};
-	uint32_t len = 0, total = 0, txs = 0;
+	uint32_t len = 0, total = 0;
+	int32_t txs = 0;
 
 	if (!block)
 		return (-1);
@@ -57,9 +58,10 @@ static int write_block(block_t *block, uint32_t index, FILE *stream)
 	memcpy(&buf[len += sizeof(block_info_t)], &total, sizeof(uint32_t));
 	memcpy(&buf[len += sizeof(uint32_t)], block->data.buffer, total);
 	memcpy(&buf[len += total], block->hash, SHA256_DIGEST_LENGTH);
-	memcpy(&buf[len += SHA256_DIGEST_LENGTH], &txs, sizeof(uint32_t));
-	fwrite(buf, len, 1, stream);
-	llist_for_each(block->transactions, (node_func_t)&write_tx, stream);
+	memcpy(&buf[len += SHA256_DIGEST_LENGTH], &txs, sizeof(int32_t));
+	fwrite(buf, len += sizeof(int32_t), 1, stream);
+	if (txs > 0)
+		llist_for_each(block->transactions, (node_func_t)&write_tx, stream);
 	return (0);
 }
 
@@ -84,7 +86,7 @@ static int write_tx(transaction_t *tx, uint32_t index, FILE *stream)
 	ins = llist_size(tx->inputs), outs = llist_size(tx->outputs);
 	memcpy(&buf[len += SHA256_DIGEST_LENGTH], &ins, sizeof(uint32_t));
 	memcpy(&buf[len += sizeof(uint32_t)], &outs, sizeof(uint32_t));
-	fwrite(buf, len, 1, stream);
+	fwrite(buf, len += sizeof(uint32_t), 1, stream);
 	llist_for_each(tx->inputs, (node_func_t)&write_in, stream);
 	llist_for_each(tx->outputs, (node_func_t)&write_out, stream);
 	return (0);
@@ -114,7 +116,7 @@ static int write_in(tx_in_t *in, uint32_t index, FILE *stream)
 		SHA256_DIGEST_LENGTH);
 	memcpy(&buf[len += SHA256_DIGEST_LENGTH], in->sig.sig, SIG_MAX_LEN);
 	memcpy(&buf[len += SIG_MAX_LEN], &in->sig.len, sizeof(uint8_t));
-	fwrite(buf, len, 1, stream);
+	fwrite(buf, len += sizeof(uint8_t), 1, stream);
 	return (0);
 }
 
@@ -138,7 +140,7 @@ static int write_out(tx_out_t *out, uint32_t index, FILE *stream)
 	memcpy(&buf[len], &out->amount, sizeof(uint32_t));
 	memcpy(&buf[len += sizeof(uint32_t)], out->pub, EC_PUB_LEN);
 	memcpy(&buf[len += EC_PUB_LEN], out->hash, SHA256_DIGEST_LENGTH);
-	fwrite(buf, len, 1, stream);
+	fwrite(buf, len += SHA256_DIGEST_LENGTH, 1, stream);
 	return (0);
 }
 
@@ -164,6 +166,6 @@ static int write_uto(unspent_tx_out_t *uto, uint32_t index, FILE *stream)
 	memcpy(&buf[len += SHA256_DIGEST_LENGTH], &uto->out.amount, sizeof(uint32_t));
 	memcpy(&buf[len += sizeof(uint32_t)], uto->out.pub, EC_PUB_LEN);
 	memcpy(&buf[len += EC_PUB_LEN], uto->out.hash, SHA256_DIGEST_LENGTH);
-	fwrite(buf, len, 1, stream);
+	fwrite(buf, len += SHA256_DIGEST_LENGTH, 1, stream);
 	return (0);
 }
