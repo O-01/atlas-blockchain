@@ -18,10 +18,9 @@ static uint8_t load_utos(blockchain_t *bc, uint32_t count, FILE *stream);
 blockchain_t *blockchain_deserialize(char const *path)
 {
 	blockchain_t *blockchain = NULL;
-	block_t *block = NULL;
 	FILE *stream = NULL;
 	uint8_t f_head[16];
-	uint32_t iter = 0, block_count = 0, uto_count = 0;
+	uint32_t block_count = 0, uto_count = 0;
 
 	if (!path)
 		return (NULL);
@@ -41,9 +40,9 @@ blockchain_t *blockchain_deserialize(char const *path)
 		return (blockchain_destroy(blockchain), fclose(stream), NULL);
 	fread(&block_count, sizeof(uint32_t), 1, stream);
 	fread(&uto_count, sizeof(uint32_t), 1, stream);
-	if (load_blocks(blockchain, block_count, stream) == -1)
+	if (load_blocks(blockchain, block_count, stream))
 		return (blockchain_destroy(blockchain), fclose(stream), NULL);
-	if (load_utos(blockchain, uto_count, stream) == -1)
+	if (load_utos(blockchain, uto_count, stream))
 		return (blockchain_destroy(blockchain), fclose(stream), NULL);
 	fclose(stream);
 	return (blockchain);
@@ -65,14 +64,15 @@ static uint8_t load_blocks(blockchain_t *bc, uint32_t count, FILE *stream)
 	{
 		block = calloc(1, sizeof(block_t));
 		if (!block)
-			return (-1);
+			return (1);
 		fread(&block->info, sizeof(block_info_t), 1, stream);
 		fread(&block->data.len, sizeof(uint32_t), 1, stream);
 		fread(block->data.buffer, block->data.len, 1, stream);
 		fread(block->hash, SHA256_DIGEST_LENGTH, 1, stream);
 		fread(&tx_count, sizeof(uint32_t), 1, stream);
 		block->transactions = llist_create(MT_SUPPORT_FALSE);
-		load_tx(block, tx_count, stream);
+		if (load_tx(block, tx_count, stream))
+			return (1);
 		llist_add_node(bc->chain, block, ADD_NODE_REAR);
 	}
 	return (0);
@@ -94,14 +94,14 @@ static uint8_t load_tx(block_t *block, uint32_t count, FILE *stream)
 	{
 		tx = calloc(1, sizeof(transaction_t));
 		if (!tx)
-			return (-1);
+			return (1);
 		fread(tx->id, SHA256_DIGEST_LENGTH, 1, stream);
 		fread(&in_count, sizeof(uint32_t), 1, stream);
 		fread(&out_count, sizeof(uint32_t), 1, stream);
 		tx->inputs = llist_create(MT_SUPPORT_FALSE);
 		tx->outputs = llist_create(MT_SUPPORT_FALSE);
-		load_in(tx, in_count, stream);
-		load_out(tx, out_count, stream);
+		if (load_in(tx, in_count, stream) || load_out(tx, out_count, stream))
+			return (1);
 		llist_add_node(block->transactions, tx, ADD_NODE_REAR);
 	}
 	return (0);
@@ -124,7 +124,7 @@ static uint8_t load_in(transaction_t *tx, uint32_t count, FILE *stream)
 	{
 		in = calloc(1, sizeof(tx_in_t));
 		if (!in)
-			return (-1);
+			return (1);
 		fread(in->block_hash, SHA256_DIGEST_LENGTH, 1, stream);
 		fread(in->tx_id, SHA256_DIGEST_LENGTH, 1, stream);
 		fread(in->tx_out_hash, SHA256_DIGEST_LENGTH, 1, stream);
@@ -152,7 +152,7 @@ static uint8_t load_out(transaction_t *tx, uint32_t count, FILE *stream)
 	{
 		out = calloc(1, sizeof(tx_out_t));
 		if (!out)
-			return (-1);
+			return (1);
 		fread(&out->amount, sizeof(uint32_t), 1, stream);
 		fread(out->pub, EC_PUB_LEN, 1, stream);
 		fread(out->hash, SHA256_DIGEST_LENGTH, 1, stream);
@@ -178,7 +178,7 @@ static uint8_t load_utos(blockchain_t *bc, uint32_t count, FILE *stream)
 	{
 		uto = calloc(1, sizeof(unspent_tx_out_t));
 		if (!uto)
-			return (-1);
+			return (1);
 		fread(uto->block_hash, SHA256_DIGEST_LENGTH, 1, stream);
 		fread(uto->tx_id, SHA256_DIGEST_LENGTH, 1, stream);
 		fread(&uto->out.amount, sizeof(uint32_t), 1, stream);
