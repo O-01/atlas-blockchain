@@ -77,6 +77,7 @@ static int write_tx(transaction_t *tx, uint32_t index, FILE *stream)
 
 	if (!tx)
 		return (-1);
+	(void)index;
 	if (IS_BIG_ENDIAN)
 		SWAPENDIAN(tx);
 	memcpy(&buf[len], tx->id, SHA256_DIGEST_LENGTH);
@@ -104,6 +105,7 @@ static int write_in(tx_in_t *in, uint32_t index, FILE *stream)
 
 	if (!in)
 		return (-1);
+	(void)index;
 	if (IS_BIG_ENDIAN)
 		SWAPENDIAN(in);
 	memcpy(&buf[len], in->block_hash, SHA256_DIGEST_LENGTH);
@@ -130,6 +132,7 @@ static int write_out(tx_out_t *out, uint32_t index, FILE *stream)
 
 	if (!out)
 		return (-1);
+	(void)index;
 	if (IS_BIG_ENDIAN)
 		SWAPENDIAN(out);
 	memcpy(&buf[len], &out->amount, sizeof(uint32_t));
@@ -153,6 +156,7 @@ static int write_uto(unspent_tx_out_t *uto, uint32_t index, FILE *stream)
 
 	if (!uto)
 		return (-1);
+	(void)index;
 	if (IS_BIG_ENDIAN)
 		SWAPENDIAN(uto);
 	memcpy(&buf[len], uto->block_hash, SHA256_DIGEST_LENGTH);
