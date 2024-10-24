@@ -180,7 +180,7 @@ static uint8_t load_out(transaction_t *tx, uint32_t count, FILE *stream)
  *      outputs to load into
  * @count: number of expected unspent transaction outputs to be loaded
  * @stream: file stream from which to read data
- * Return: 0 upon success, otherwise -1 upon memory allocation failure
+ * Return: 0 upon success, otherwise 1
  */
 static uint8_t load_utos(blockchain_t *bc, uint32_t count, FILE *stream)
 {
